@@ -17,7 +17,8 @@ def transcribe_model_selection_v2(
 
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
-        language_codes=["en-US"],
+        # language_codes=["en-US"],
+        language_codes=["hi-IN"],
         model=model,
     )
 
@@ -40,10 +41,11 @@ if __name__ == "__main__":
 
     print("Transcribing audio file...")
 
-    print(transcribe_model_selection_v2(
+    transcribe_model_selection_v2(
         project_id="sage-418803",
-        model="latest_long",
-        audio_file="gas.mp3",
-    ))
+        # model="latest_long",
+        model="telephony",
+        audio_file="namaste.mp3",
+    )
 
     print("Transcription complete.")

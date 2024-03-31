@@ -38,8 +38,7 @@ mic.lang = 'en-US';
 
 function App() {
   // store data from backend in data
-  const [data, setData] = useState([{}]);
-  const [response, setResponse] = useState([{}]); // RESPONSES
+  const [data, setData] = useState({ response: "" });
 
   // audio stuff
   const [isListening, setIsListening] = useState(false);
@@ -87,7 +86,7 @@ function App() {
 
     setSavedNotes(savedNotes => [...savedNotes, note]); // Using the functional form of setState
     
-    console.log([...savedNotes, note])
+    console.log(JSON.stringify([...savedNotes, note]))
 
     // fetch for sending data
     // Making an AJAX request to Flask backend
@@ -96,18 +95,18 @@ function App() {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify([...savedNotes, note])
+      body: JSON.stringify({ data: [...savedNotes, note] })
     })
-    .then(response => {
-      // Handle response if needed
-      console.log('Data sent successfully');
+    .then(res => res.json())
+    .then(responseData => {
+      setData({ response: responseData.response }); // Update state with the response
+      console.log("Response received:", responseData);
     })
     .catch(error => {
-      // Handle error if needed
       console.error('Error sending data:', error);
     });
     setNote('');
-  };
+};
 
   // fetch members from backend to frontend, should re-render
   useEffect(() => {
@@ -123,15 +122,8 @@ function App() {
 
   // fetch GEMINI RESPONSE from backend to frontend, should re-render
   useEffect(() => {
-    fetch('/response')
-      .then(res => res.json())
-      .then(data => {
-        // call setData
-        setResponse(data);
-        console.log("eeyore");
-        console.log(data);
-      });
-  }, [response]);
+    console.log("inshallah")
+  }, [data]);
 
   return (
     <ChakraProvider>
@@ -173,16 +165,16 @@ function App() {
             size="lg"
             src="https://i.imgur.com/IO3XefC.png"
           />
-          {response == null ? (
-              <TypeIt options={{ speed: 30, waitUntilVisible: true, }} style={{ fontSize: "36px" }}>
-                { "Loading" }
-              </TypeIt>
-            ) : (
-              <TypeIt options={{ speed: 30, waitUntilVisible: true, }} style={{ fontSize: "36px" }}>
-                { JSON.stringify(response) }
-              </TypeIt>
-            )}
+          {data.response == '' ? (
+            <div><b>Hello!</b> Tell me about yourself and if you have any TB symptoms. </div>
+          ) : (
+            <div>{ data.response } </div>
+          )}
           
+          {/* <TypeIt options={{ speed: 30, waitUntilVisible: true }} style={{ fontSize: "36px" }}>
+  {       data.response}
+</TypeIt> */}
+
         </HStack>
       </Center>
 

@@ -1,5 +1,5 @@
 import json
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from pathlib import Path
 import langchain
 from langchain.text_splitter import RecursiveCharacterTextSplitter,CharacterTextSplitter
@@ -58,8 +58,7 @@ def generate_report(name, age, gender, location, summary, technical):
 
     return output_pdf
 
-
-generate_report("Anoop Rehman", "67", "Male", "Dharavi", "SUMMARY Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh viverra non semper suscipit posuere a pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis.", "Technical Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh viverra non semper suscipit posuere a pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis.")
+# generate_report("Anoop Rehman", "67", "Male", "Dharavi", "SUMMARY Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh viverra non semper suscipit posuere a pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis.", "Technical Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh viverra non semper suscipit posuere a pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis.")
 
 
 notes = []
@@ -186,7 +185,7 @@ def ML(current_question, chat_history):
 
     # Invoke the chain with the input question
     result = chain.invoke({"question": current_question})
-
+    print(type(result))
     return result
 
 model = VertexAI(
@@ -234,10 +233,15 @@ app = Flask(__name__)
 
 @app.route('/send-data', methods=['POST'])
 def receive_data():
-    global notes
-    notes = request.json  # Get the JSON data from the request
-    print("Received data:", notes)
-    return "Data received successfully"
+    global memory
+    data = request.json.get('data')
+    if data:
+        memory.extend("Question: " + data[-1])  # Append the new data to the memory array
+        response = ML(memory[-1], memory[:-1])
+        memory.append("Answer: " + response)
+        return jsonify({'response': response})
+    else:
+        return jsonify({'message': 'No data received'}), 400
 
 # Members API Route : pass data from backend to frontend
 @app.route("/members")
@@ -248,9 +252,9 @@ def members():
 
 # Generate model response for the frontend
 @app.route("/response")
-def response():
+def response(query):
     global memory
-    memory.append("Question: " + request.json)
+    memory.append("Question: " + query)
     # respond to question_memory[-1], use the rest as memory of previous question/answer pairs
     response = ML(memory[-1], memory[:-1])
     print("response is responding!!!!")

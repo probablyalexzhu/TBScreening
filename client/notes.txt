@@ -1,3 +1,4 @@
 things I had to do to get this running:
 - npm i react
 - something something
+- run server.py in backend

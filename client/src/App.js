@@ -39,6 +39,7 @@ mic.lang = 'en-US';
 function App() {
   // store data from backend in data
   const [data, setData] = useState([{}]);
+  const [response, setResponse] = useState([{}]); // RESPONSES
 
   // audio stuff
   const [isListening, setIsListening] = useState(false);
@@ -120,6 +121,18 @@ function App() {
       });
   }, [savedNotes]);
 
+  // fetch GEMINI RESPONSE from backend to frontend, should re-render
+  useEffect(() => {
+    fetch('/response')
+      .then(res => res.json())
+      .then(data => {
+        // call setData
+        setResponse(data);
+        console.log("eeyore");
+        console.log(data);
+      });
+  }, [response]);
+
   return (
     <ChakraProvider>
       <Center
@@ -133,7 +146,6 @@ function App() {
           boxSize='100px'
           src='https://i.imgur.com/iLMAeW1.png'
         />
-
         
         <Heading
           ml="20px"
@@ -161,9 +173,16 @@ function App() {
             size="lg"
             src="https://i.imgur.com/IO3XefC.png"
           />
-          <TypeIt options={{ speed: 30, waitUntilVisible: true, }} style={{ fontSize: "36px" }}>
-            <b>Hello!</b> Tell me about yourself and your symptoms by reporting them below.
-          </TypeIt>
+          {response == null ? (
+              <TypeIt options={{ speed: 30, waitUntilVisible: true, }} style={{ fontSize: "36px" }}>
+                { "Loading" }
+              </TypeIt>
+            ) : (
+              <TypeIt options={{ speed: 30, waitUntilVisible: true, }} style={{ fontSize: "36px" }}>
+                { JSON.stringify(response) }
+              </TypeIt>
+            )}
+          
         </HStack>
       </Center>
 

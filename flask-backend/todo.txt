@@ -1,0 +1,5 @@
+- get this v1 working.
+- get image import working into the pdf. pretty important for making it look nice.
+- think about what fields to have for the template,
+- pretty much in parallel, also think about how to lay it out. sketch in notebook, think about the demo, the use case.
+- make the template in google docs.

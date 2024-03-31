@@ -85,9 +85,8 @@ function App() {
     console.log("note: ", note)
 
     setSavedNotes(savedNotes => [...savedNotes, note]); // Using the functional form of setState
-    setNote('');
-
-    console.log(savedNotes)
+    
+    console.log([...savedNotes, note])
 
     // fetch for sending data
     // Making an AJAX request to Flask backend
@@ -96,7 +95,7 @@ function App() {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(savedNotes)
+      body: JSON.stringify([...savedNotes, note])
     })
     .then(response => {
       // Handle response if needed
@@ -106,7 +105,7 @@ function App() {
       // Handle error if needed
       console.error('Error sending data:', error);
     });
-
+    setNote('');
   };
 
   // fetch members from backend to frontend, should re-render

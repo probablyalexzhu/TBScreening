@@ -61,5 +61,4 @@ def generate_report(name, age, gender, location, summary, technical):
 
     return output_pdf
 
-
-generate_report("Anoop Rehman", "67", "Male", "Dharavi", "Summary blah blah blah", "Technical blah blah blah")
+generate_report("Frank Ocean 2", "General blah blah blah blah", "Symptoms blah blah blah", "Exposure blah blah blah", "AI Comments blah blah blah", "Risk Level Summary blah blah blah")

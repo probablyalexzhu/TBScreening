@@ -1,6 +1,7 @@
 import json
 from flask import Flask, request
 from pathlib import Path
+from report-generator import generate_report
 import langchain
 from langchain.text_splitter import RecursiveCharacterTextSplitter,CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
@@ -195,10 +196,10 @@ def generate_report():
     concat_string = ". ".join(memory)
     new_dict = dict()
     for key, value in prompts.items():
-        res = summary_model.generate_count(value)
+        prompt = f"{value}\n{concat_string}"
+        res = summary_model.generate_content(prompt)
         new_dict[key] = res[0]
-    return new_dict
-
+    return generate_report(new_dict['Name'], new_dict['Age'], new_dict['Gender'], new_dict['Location'], new_dict['AI_Patient_Summary'], None)
 # Convert extracted_info list to JSON format
 json_data = json.dumps(extracted_info, indent=4)
 

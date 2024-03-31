@@ -1,9 +1,10 @@
 import json
-from flask import Flask, request
+import generate_report
 
+from flask import Flask, request
 bruh = "hello, world. i'm python code"
 notes = []
-question = []
+question_memory = []
 
 # --------------------------------- FLASK SECTION ---------------------------------
 
@@ -33,6 +34,14 @@ def response():
     print("response is responding!!!!")
     question_memory.append(response)
     return response
+
+# Generate report
+@app.route("/report")
+def report():
+    global question_memory
+    report = generate_report(question_memory)
+    print("report is reporting!!!!")
+    return report
 
 if __name__ == "__main__":
     # switch to port 8000 for mac, because 5000 is taken by control centre

@@ -135,7 +135,7 @@ function App() {
           fontWeight="extrabold"
           size="6xl"
         >
-          Tuberculosis AI Pre-Screener
+          Tuberculosis AI Pre-Screening
         </Heading>
       </Center>
 

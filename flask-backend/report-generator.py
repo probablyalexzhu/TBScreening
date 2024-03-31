@@ -25,5 +25,5 @@ output_text = template.render(context)
 
 config = pdfkit.configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf')
 output_pdf = 'doctor_report.pdf'
-output_pdf = 'NOIMAGES_doctor_report.pdf'
-pdfkit.from_string(output_text, output_pdf, configuration=config)
+# output_pdf = 'NOIMAGES_doctor_report.pdf'
+pdfkit.from_string(output_text, output_pdf, configuration=config, options={"enable-local-file-access": ""})

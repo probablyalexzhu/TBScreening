@@ -40,17 +40,6 @@ function App() {
   // store data from backend in data
   const [data, setData] = useState([{}]);
 
-  // fetch members from backend to frontend, should re-render
-  useEffect(() => {
-    fetch('/members')
-      .then(res => res.json())
-      .then(data => {
-        // call setData
-        setData(data);
-        console.log(data);
-      });
-  }, []);
-
   // audio stuff
   const [isListening, setIsListening] = useState(false);
   const [note, setNote] = useState(null);
@@ -91,9 +80,46 @@ function App() {
   };
 
   const handleSaveNote = () => {
-    setSavedNotes([...savedNotes, note]);
+    
+    console.log("obama: ")
+    console.log("note: ", note)
+
+    setSavedNotes(savedNotes => [...savedNotes, note]); // Using the functional form of setState
     setNote('');
+
+    console.log(savedNotes)
+
+    // fetch for sending data
+    // Making an AJAX request to Flask backend
+    fetch('/send-data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(savedNotes)
+    })
+    .then(response => {
+      // Handle response if needed
+      console.log('Data sent successfully');
+    })
+    .catch(error => {
+      // Handle error if needed
+      console.error('Error sending data:', error);
+    });
+
   };
+
+  // fetch members from backend to frontend, should re-render
+  useEffect(() => {
+    fetch('/members')
+      .then(res => res.json())
+      .then(data => {
+        // call setData
+        setData(data);
+        console.log("shrek");
+        console.log(data);
+      });
+  }, [savedNotes]);
 
   return (
     <ChakraProvider>
@@ -207,10 +233,10 @@ function App() {
       </Center>
 
       <div>
-        {typeof data.members === 'undefined' ? (
+        {typeof data === 'undefined' ? (
           <p>Loading...</p>
         ) : (
-          data.members.map((member, i) => <p key={i}>{member}</p>)
+          data.map((member, i) => <p key={i}>{JSON.stringify(member)}</p>)
         )}
       </div>
       {/* <div className="box">

@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react";
 
 export default function ChatBox({ data }) {
-    return data.map((item) => <MessageItem item={item} />);
+    return data.map((item) => <MessageItem item={item} key={item}/>);
 }
 
 function MessageItem({ item }) {

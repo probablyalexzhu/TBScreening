@@ -23,7 +23,7 @@ import {
   CardBody,
   Image,
 } from '@chakra-ui/react';
-import { ChatIcon, CloseIcon, CheckCircleIcon } from '@chakra-ui/icons';
+import { ChatIcon, DownloadIcon, CheckCircleIcon } from '@chakra-ui/icons';
 import { useState, useEffect } from 'react';
 import ChatBox from './components/ChatBox';
 import TypeIt from "typeit-react";
@@ -127,7 +127,16 @@ function App() {
         backgroundColor="teal"
         bgGradient="linear(to-l, teal.600, blue.600)"
       >
+        <Image
+          mt="20px"
+          borderRadius='full'
+          boxSize='100px'
+          src='https://i.imgur.com/iLMAeW1.png'
+        />
+
+        
         <Heading
+          ml="20px"
           mt="20px"
           mb="10px"
           color="white"
@@ -159,7 +168,7 @@ function App() {
       </Center>
 
       <Center>
-        <Card align="center" width="600px" mb="10px">
+        <Card align="center" width="700px" mb="10px">
           <CardHeader>
             {isListening ? (
               <Heading size="lg">
@@ -195,7 +204,8 @@ function App() {
                   {isListening || note == null ? (
                     <Text>Wait a couple seconds before speaking</Text>
                   ) : (
-                    <Button
+                    <HStack>
+                      <Button
                       rightIcon={<CheckCircleIcon />}
                       colorScheme="green"
                       size="lg"
@@ -203,6 +213,16 @@ function App() {
                     >
                       Submit Answer
                     </Button>
+
+                    <Button
+                      rightIcon={<DownloadIcon />}
+                      colorScheme="blue"
+                      size="lg"
+                      onClick={handleSaveNote} // to do later
+                    >
+                      Generate PDF
+                    </Button>
+                    </HStack>
                   )}
                 </HStack>
               </Center>
@@ -231,13 +251,13 @@ function App() {
         </Stack>
       </Center>
 
-      <div>
+      {/* <div>
         {typeof data === 'undefined' ? (
           <p>Loading...</p>
         ) : (
           data.map((member, i) => <p key={i}>{JSON.stringify(member)}</p>)
         )}
-      </div>
+      </div> */}
       {/* <div className="box">
         <h2>Notes</h2>
         {savedNotes.map(n => (

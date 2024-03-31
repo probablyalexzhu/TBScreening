@@ -1,7 +1,7 @@
 note: neeed to finish all of this by 9:07pm.
 
-- get this v1 working.
-- get image import working into the pdf. pretty important for making it look nice.
+X get this v1 working.
+O get image import working into the pdf. pretty important for making it look nice.
 - think about what fields to have for the template,
 - pretty much in parallel, also think about how to lay it out. sketch in notebook, think about the demo, the use case.
 - make the template in google docs.

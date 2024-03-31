@@ -1,8 +1,10 @@
 import json
-from flask import Flask, request
+import generate_report
 
+from flask import Flask, request
 bruh = "hello, world. i'm python code"
 notes = []
+question_memory = []
 
 # --------------------------------- FLASK SECTION ---------------------------------
 
@@ -21,6 +23,25 @@ def members():
     global notes
     print("members is membering!!!!")
     return notes
+
+# Generate model response for the frontend
+@app.route("/response")
+def response():
+    global question_memory
+    question_memory.append(request.json)
+    # respond to question_memory[-1], use the rest as memory of previous question/answer pairs
+    response = ML(question_memory[-1], question_memory[:-1])
+    print("response is responding!!!!")
+    question_memory.append(response)
+    return response
+
+# Generate report
+@app.route("/report")
+def report():
+    global question_memory
+    report = generate_report(question_memory)
+    print("report is reporting!!!!")
+    return report
 
 if __name__ == "__main__":
     # switch to port 8000 for mac, because 5000 is taken by control centre

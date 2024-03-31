@@ -1,0 +1,10 @@
+note: neeed to finish all of this by 9:07pm.
+
+X get this v1 working.
+X get image import working into the pdf. pretty important for making it look nice.
+O think about what fields to have for the template,
+- pretty much in parallel, also think about how to lay it out. sketch in notebook, think about the demo, the use case.
+- make the template in google docs.
+- add current time from datetime
+# today_date = datetime.today().strftime("%d %b, %Y")
+# month = datetime.today().strftime("%B")

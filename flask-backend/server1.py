@@ -238,6 +238,13 @@ def response():
     memory.append("Answer: " + response)
     return response
 
+# Generate report
+@app.route("/report")
+def generate_report_1():
+    generate_report()
+    print("report is reporting!!!!")
+    return 
+
 if __name__ == "__main__":
     # switch to port 8000 for mac, because 5000 is taken by control centre
     app.run(port=8000, debug=True)

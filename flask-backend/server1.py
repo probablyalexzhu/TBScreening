@@ -192,22 +192,16 @@ summary_model = VertexAI(
     temperature=0.15, model_name='gemini-1.0-pro', max_output_tokens=2000
 )
 
-def generate_report():
+def generate_report_1():
     concat_string = ". ".join(memory)
     new_dict = dict()
     for key, value in prompts.items():
         prompt = f"{value}\n{concat_string}"
         res = summary_model.generate_content(prompt)
         new_dict[key] = res[0]
+        print(res)
     return generate_report(new_dict['Name'], new_dict['Age'], new_dict['Gender'], new_dict['Location'], new_dict['AI_Patient_Summary'], None)
-# Convert extracted_info list to JSON format
-json_data = json.dumps(extracted_info, indent=4)
 
-# Write JSON data to a file
-with open("extracted_info.json", "w") as json_file:
-    json_file.write(json_data)
-
-print("Data has been written to extracted_info.json file.")
 
 # --------------------------------- FLASK SECTION ---------------------------------
 
@@ -237,6 +231,9 @@ def response():
     print("response is responding!!!!")
     memory.append("Answer: " + response)
     return response
+
+# Generate report
+
 
 if __name__ == "__main__":
     # switch to port 8000 for mac, because 5000 is taken by control centre

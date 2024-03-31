@@ -103,7 +103,7 @@ function App() {
         bgGradient="linear(to-l, teal.600, blue.600)"
       >
         <Heading
-          mt="40px"
+          mt="20px"
           mb="10px"
           color="white"
           fontSize="6xl"
@@ -115,31 +115,33 @@ function App() {
       </Center>
 
       <Center color="white" bgGradient="linear(to-l, teal.600, blue.600)">
-        <Text mb="40px" fontSize="xl">
+        <Text mb="30px" fontSize="xl">
           Generative AI and speech-to-text to detect potential TB cases and
           create a report for doctors
         </Text>
       </Center>
 
       <Center mt="100px" mb="100px" color="black">
-        <TypeIt options={{ speed: 30, waitUntilVisible: true, }} style={{ fontSize: "36px" }}>
-          <b>Hello!</b> Tell me about yourself and your symptoms by reporting them below.
-        </TypeIt>
+        <HStack spacing="20px">
+          <Avatar
+            size="lg"
+            src="https://i.imgur.com/IO3XefC.png"
+          />
+          <TypeIt options={{ speed: 30, waitUntilVisible: true, }} style={{ fontSize: "36px" }}>
+            <b>Hello!</b> Tell me about yourself and your symptoms by reporting them below.
+          </TypeIt>
+        </HStack>
       </Center>
 
       <Center>
-        <ChatBox data={savedNotes} />
-      </Center>
-
-      <Center>
-        <Card align="center" width="600px">
+        <Card align="center" width="600px" mb="10px">
           <CardHeader>
             {isListening ? (
-              <Heading size="md">
+              <Heading size="lg">
                 Voice Input 🔴
               </Heading>
             ) : (
-              <Heading size="md">
+              <Heading size="lg">
               Voice Input 🎙️
               </Heading>
             )}
@@ -150,9 +152,9 @@ function App() {
           <CardFooter>
             <VStack>
               <Center>
-                <VStack>
+                <HStack>
                   <Button
-                    leftIcon={<ChatIcon />}
+                    rightIcon={<ChatIcon />}
                     variant="solid"
                     colorScheme="red"
                     size="lg"
@@ -165,16 +167,11 @@ function App() {
                     )}
                   </Button>
 
-                  {isListening ? (
-                    <Button
-                    isLoading
-                    colorScheme="green"
-                    size="lg"
-                    > A Submit Answer
-                    </Button>
+                  {isListening || note == null ? (
+                    <Text>Wait a couple seconds before speaking</Text>
                   ) : (
                     <Button
-                      leftIcon={<CheckCircleIcon />}
+                      rightIcon={<CheckCircleIcon />}
                       colorScheme="green"
                       size="lg"
                       onClick={handleSaveNote}
@@ -182,21 +179,41 @@ function App() {
                       Submit Answer
                     </Button>
                   )}
-                </VStack>
+                </HStack>
               </Center>
             </VStack>
           </CardFooter>
         </Card>
       </Center>
 
-      {/* <div>
+      <Center mt="50px">
+        <Stack>
+          <HStack width="50%" maxWidth="6xl">
+            <Stack>
+              <Text fontSize="3xl">
+                  <b>Your Responses</b>
+              </Text>
+              <Divider></Divider>
+              <Box
+                  overflowY="auto"
+                  maxHeight="150px"
+                  minWidth="6xl"
+              >
+                  <ChatBox data={savedNotes} />
+              </Box>
+            </Stack>
+          </HStack>
+        </Stack>
+      </Center>
+
+      <div>
         {typeof data.members === 'undefined' ? (
           <p>Loading...</p>
         ) : (
           data.members.map((member, i) => <p key={i}>{member}</p>)
         )}
       </div>
-      <div className="box">
+      {/* <div className="box">
         <h2>Notes</h2>
         {savedNotes.map(n => (
           <p key={n}>{n}</p>

@@ -13,12 +13,6 @@ risk_level_summary = "Risk Level Summary blah blah blah"
 today_date = datetime.today().strftime("%d %b, %Y")
 month = datetime.today().strftime("%B")
 
-# context = {'client_name': client_name, 'today_date': today_date, 'date_completed': date_completed, 'total': f'${total:.2f}', 'month': month,
-#            'item1': item1, 'subtotal1': f'${subtotal1:.2f}',
-#            'item2': item2, 'subtotal2': f'${subtotal2:.2f}',
-#            'item3': item3, 'subtotal3': f'${subtotal3:.2f}'
-#            }
-
 context = {'name': name, 'date_completed': date_completed, 'general': general, 'symptoms': symptoms, 'exposure': exposure, 'ai_comments': ai_comments, 'risk_level_summary': risk_level_summary}
 
 template_loader = jinja2.FileSystemLoader('./')

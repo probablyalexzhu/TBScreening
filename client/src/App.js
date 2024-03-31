@@ -23,16 +23,18 @@ import {
   CardBody,
   Image,
 } from '@chakra-ui/react';
-import { ChatIcon, CloseIcon } from '@chakra-ui/icons';
+import { ChatIcon, CloseIcon, CheckCircleIcon } from '@chakra-ui/icons';
 import { useState, useEffect } from 'react';
+import ChatBox from './components/ChatBox';
+import TypeIt from "typeit-react";
 
 const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition
-const mic = new SpeechRecognition()
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+const mic = new SpeechRecognition();
 
-mic.continuous = true
-mic.interimResults = true
-mic.lang = 'fr'
+mic.continuous = true;
+mic.interimResults = true;
+mic.lang = 'en-US';
 
 function App() {
   // store data from backend in data
@@ -50,113 +52,144 @@ function App() {
   }, []);
 
   // audio stuff
-  const [isListening, setIsListening] = useState(false)
-  const [note, setNote] = useState(null)
-  const [savedNotes, setSavedNotes] = useState([])
+  const [isListening, setIsListening] = useState(false);
+  const [note, setNote] = useState(null);
+  const [savedNotes, setSavedNotes] = useState([]);
 
   useEffect(() => {
-    handleListen()
-  }, [isListening])
+    handleListen();
+  }, [isListening]);
 
   const handleListen = () => {
     if (isListening) {
-      mic.start()
+      mic.start();
       mic.onend = () => {
-        console.log('continue..')
-        mic.start()
-      }
+        console.log('continue..');
+        mic.start();
+      };
     } else {
-      mic.stop()
+      mic.stop();
       mic.onend = () => {
-        console.log('Stopped Mic on Click')
-      }
+        console.log('Stopped Mic on Click');
+      };
     }
     mic.onstart = () => {
-      console.log('Mics on')
-    }
+      console.log('Mics on');
+    };
 
     mic.onresult = event => {
       const transcript = Array.from(event.results)
         .map(result => result[0])
         .map(result => result.transcript)
-        .join('')
-      console.log(transcript)
-      setNote(transcript)
+        .join('');
+      console.log(transcript);
+      setNote(transcript);
       mic.onerror = event => {
-        console.log(event.error)
-      }
-    }
-  }
+        console.log(event.error);
+      };
+    };
+  };
 
   const handleSaveNote = () => {
-    setSavedNotes([...savedNotes, note])
-    setNote('')
-  }
+    setSavedNotes([...savedNotes, note]);
+    setNote('');
+  };
 
   return (
     <ChakraProvider>
-      <Center mt="50px" color="black">
+      <Center
+        color="black"
+        backgroundColor="teal"
+        bgGradient="linear(to-l, teal.600, blue.600)"
+      >
         <Heading
-          bgGradient="linear(to-l, teal.500, green.500)"
-          bgClip="text"
+          mt="40px"
+          mb="10px"
+          color="white"
           fontSize="6xl"
           fontWeight="extrabold"
           size="6xl"
         >
-          India Tuberculosis AI Pre-Screener
+          Tuberculosis AI Pre-Screener
         </Heading>
       </Center>
 
-      <Center mt="50px" mb="50px" color="black">
-        <Text fontSize="2xl">
-          Pre-screening with generative AI and text-to-speech to alert potential
-          TB cases and create a report for doctors
+      <Center color="white" bgGradient="linear(to-l, teal.600, blue.600)">
+        <Text mb="40px" fontSize="xl">
+          Generative AI and speech-to-text to detect potential TB cases and
+          create a report for doctors
         </Text>
       </Center>
 
       <Center mt="100px" mb="100px" color="black">
-        <Text>
-          Hello! Tell me about yourself and your symptoms by reporting them below.
-        </Text>
+        <TypeIt options={{ speed: 30, waitUntilVisible: true, }} style={{ fontSize: "36px" }}>
+          <b>Hello!</b> Tell me about yourself and your symptoms by reporting them below.
+        </TypeIt>
       </Center>
 
       <Center>
-        <Stack>
-          <Avatar />
-          <Card>
-            <CardBody>
-              <Text>
-                {note}
-              </Text>
-            </CardBody>
-          </Card>
-        </Stack>
-        </Center>
+        <ChatBox data={savedNotes} />
+      </Center>
 
-        <VStack>
-        <Center>
-          <VStack mt="50px">
-            {isListening ? <span>🎙️</span> : <span>🛑🎙️</span>}
-            <Button
-              leftIcon={<ChatIcon />}
-              color="green"
-              size="lg"
-              onClick={() => setIsListening(prevState => !prevState)}
-            >
-              Start/Stop Recording Answer
-            </Button>
-            <Button
-              leftIcon={<CloseIcon />}
-              color="red"
-              size="lg"
-              onClick={handleSaveNote}
-            >
-              Save Answer
-            </Button>
-          </VStack>
-        </Center>
-      </VStack>
-      <div>
+      <Center>
+        <Card align="center" width="600px">
+          <CardHeader>
+            {isListening ? (
+              <Heading size="md">
+                Voice Input 🔴
+              </Heading>
+            ) : (
+              <Heading size="md">
+              Voice Input 🎙️
+              </Heading>
+            )}
+          </CardHeader>
+          <CardBody>
+            <Text color={"blue.600"}>{note}</Text>
+          </CardBody>
+          <CardFooter>
+            <VStack>
+              <Center>
+                <VStack>
+                  <Button
+                    leftIcon={<ChatIcon />}
+                    variant="solid"
+                    colorScheme="red"
+                    size="lg"
+                    onClick={() => setIsListening(prevState => !prevState)}
+                  >
+                    {isListening ? (
+                      <span>Stop Recording</span>
+                    ) : (
+                      <span>Start Recording</span>
+                    )}
+                  </Button>
+
+                  {isListening ? (
+                    <Button
+                    isLoading
+                    colorScheme="green"
+                    size="lg"
+                    > A Submit Answer
+                    </Button>
+                  ) : (
+                    <Button
+                      leftIcon={<CheckCircleIcon />}
+                      colorScheme="green"
+                      size="lg"
+                      onClick={handleSaveNote}
+                    >
+                      Submit Answer
+                    </Button>
+                  )}
+                </VStack>
+              </Center>
+            </VStack>
+          </CardFooter>
+        </Card>
+      </Center>
+
+      {/* <div>
         {typeof data.members === 'undefined' ? (
           <p>Loading...</p>
         ) : (
@@ -164,11 +197,11 @@ function App() {
         )}
       </div>
       <div className="box">
-          <h2>Notes</h2>
-          {savedNotes.map(n => (
-            <p key={n}>{n}</p>
-          ))}
-        </div>
+        <h2>Notes</h2>
+        {savedNotes.map(n => (
+          <p key={n}>{n}</p>
+        ))}
+      </div> */}
     </ChakraProvider>
   );
 }

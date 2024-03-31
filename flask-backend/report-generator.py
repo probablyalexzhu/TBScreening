@@ -19,9 +19,11 @@ template_loader = jinja2.FileSystemLoader('./')
 template_env = jinja2.Environment(loader=template_loader)
 
 html_template = 'doctor_report.html'
+# html_template = 'NOIMAGES_doctor_report.html'
 template = template_env.get_template(html_template)
 output_text = template.render(context)
 
 config = pdfkit.configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf')
 output_pdf = 'doctor_report.pdf'
+output_pdf = 'NOIMAGES_doctor_report.pdf'
 pdfkit.from_string(output_text, output_pdf, configuration=config)

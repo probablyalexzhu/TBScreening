@@ -64,23 +64,26 @@ def generate_report(name, age, gender, location, summary, technical):
 notes = []
 memory = []
 
-def access_secret_version(secret_version_id):
-  client = secretmanager.SecretManagerServiceClient()
-  response = client.access_secret_version(name=secret_version_id)
-  return response.payload.data.decode('UTF-8')
-
-## HERE IS THE PROJECT NUMBER, NOT NAME --  GET WITH: gcloud projects list
-
-credential_path = '/Users/aryans0921/Downloads/oval-relic-418817-4dfc7520a574.json'
+credential_path = '/path/to/your/credentials.json'
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
-secret_version_id = f"projects/19770672095/secrets/GOOGLE_APPLICATION_CREDENTIALS/versions/1"
+# Retrieve your secret from Secret Manager
+def access_secret_version(secret_version_id):
+    client = secretmanager.SecretManagerServiceClient()
+    response = client.access_secret_version(name=secret_version_id)
+    return response.payload.data.decode('UTF-8')
 
-key=access_secret_version(secret_version_id)
-# os.getenv(key)
+# Assuming your secret version id is stored in an environment variable
+secret_version_env_var = 'MY_SECRET_VERSION_ID'
+secret_version_id = os.getenv(secret_version_env_var)
 
-## HERE IS THE PROJECT NAME
-vertexai.init(project='oval-relic-418817', location='us-central1')
+key = access_secret_version(secret_version_id)
+
+# Initialize Vertex AI with the project and location from environment variables
+project_env_var = 'MY_GCP_PROJECT'
+location_env_var = 'MY_GCP_LOCATION'
+
+vertexai.init(project=os.getenv(project_env_var), location=os.getenv(location_env_var))
 
 import warnings
 with warnings.catch_warnings():
